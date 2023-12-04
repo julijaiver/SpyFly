@@ -5,12 +5,14 @@ let player_name;
 let continent;
 let airports_in_range;
 let game_id;
-let current_airport;
+let current_airport_icao;
 let current_airport_info;
+let battery= 6000;
+let score=0;
 const overlay = document.querySelector('.overlay');
 const popup = document.querySelector('.popup');
 function initializeMap() {
-    const map = L.map('map').setView([51.505, -0.09], 7);
+    const map = L.map('map').setView([current_airport_info.latitude, current_airport_info.longitude], 5);
 
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         maxZoom: 20,
@@ -27,29 +29,27 @@ function initializeMap() {
         iconSize: [50, 50],
         iconAnchor: [25, 20]
     });
+        let marker;
 
-    let active = false;
-    let marker;
-
-    if (active) {
-        marker = L.marker([51.505, -0.09], {icon: greenMarker}).addTo(map);
-        marker.bindPopup(`You are here: <br>//airport name</br>`);
+        marker = L.marker([current_airport_info.latitude, current_airport_info.longitude], {icon: greenMarker}).addTo(map);
+        marker.bindPopup(`You are here: <br>${current_airport_info.airport_name}</br>`);
         marker.openPopup();
-    } else {
-        marker = L.marker([51.505, -0.09], {icon: redMarker}).addTo(map);
-        const popupContent = document.createElement('div');
-        const h4 = document.createElement('h4');
-        h4.innerHTML = `//airport name`;
-        popupContent.append(h4);
-        const p = document.createElement('p');
-        p.innerHTML = `Distance: //range`;
-        popupContent.append(p);
-        const flyButton = document.createElement('button');
-        flyButton.classList.add('popup-button');
-        flyButton.innerHTML = 'FLY';
-        popupContent.append(flyButton);
-        marker.bindPopup(popupContent);
-    }
+
+        for(let airport of airports_in_range){
+            marker = L.marker([airport.airport_data[0]['latitude_deg'], airport.airport_data[0]['longitude_deg']], {icon: redMarker}).addTo(map);
+            const popupContent = document.createElement('div');
+            const h4 = document.createElement('h4');
+            h4.innerHTML = `Name: ${airport.airport_data[0]['name']};`
+            popupContent.append(h4);
+            const p = document.createElement('p');
+            p.innerHTML = `Distance: ${airport.distance} km`;
+            popupContent.append(p);
+            const flyButton = document.createElement('button');
+            flyButton.classList.add('popup-button');
+            flyButton.innerHTML = 'FLY';
+            popupContent.append(flyButton);
+            marker.bindPopup(popupContent);
+        }
 
         // Function to close the popup
     function closeMarkerPopup() {
@@ -88,7 +88,15 @@ function closePopup(id) {
     overlay.style.display = 'none';
     popup.style.display = 'none';
 }
-
+//update information on screen
+function updateScreenInfo(){
+    document.querySelector("#player_name").innerText = player_name;
+    document.querySelector("#level").innerText = document.querySelector(`label[for=${continent}]`).innerText;
+    document.querySelector("#airport_name").innerText = current_airport_info.airport_name;
+    document.querySelector("#icao_code").innerText = current_airport_icao;
+    document.querySelector("#battery").innerText = battery.toString();
+    document.querySelector("#score").innerHTML = score.toString();
+}
 async function nameFormSubmit(evt) {
     evt.preventDefault();
     player_name = document.querySelector('#playersName').value;
@@ -158,10 +166,10 @@ async function newGame(){
       console.log('result',result);
        airports_in_range = result.airports_in_range;
        game_id=result.game.game_id;
-       current_airport_info=result.game
+       current_airport_info=result.game;
+       current_airport_icao=current_airport_info.current_airport;
        console.log(game_id)
        console.log(current_airport_info)
-       console.log(airports_in_range)
 
    } catch (e) {
       console.log('error', e);
@@ -170,6 +178,7 @@ async function newGame(){
 submitDifficultyButton.addEventListener('click', async function() {
     continent = document.querySelector('input[name="Difficulty"]:checked').id;
     await newGame();
+    updateScreenInfo();
     closePopup('difficultyPopContainer');
     initializeMap();
 });
