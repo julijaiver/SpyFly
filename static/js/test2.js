@@ -1,6 +1,12 @@
 'use strict';
 
 // global variables
+let player_name;
+let continent;
+let airports_in_range;
+let game_id;
+let current_airport;
+let current_airport_info;
 const overlay = document.querySelector('.overlay');
 const popup = document.querySelector('.popup');
 function initializeMap() {
@@ -77,14 +83,21 @@ function showPopup(id) {
     overlay.style.display = 'block';
     popup.style.display = 'block';
 }
+function closePopup(id) {
+    const popup = document.querySelector(`#${id}`);
+    overlay.style.display = 'none';
+    popup.style.display = 'none';
+}
 
 async function nameFormSubmit(evt) {
     evt.preventDefault();
-    const name = document.querySelector('#playersName').value;
+    player_name = document.querySelector('#playersName').value;
     //const nameDisplay = document.querySelector('#displayName');
     //nameDisplay.append(name);
     popup.style.display = 'none';
-     //Flask part?
+
+
+     //ajax to connect to flask
 //     try {
 //         await fetch('/name', {
 //             method: 'POST',
@@ -107,48 +120,59 @@ async function nameFormSubmit(evt) {
 //     }
  }
 
+
 document.addEventListener('DOMContentLoaded', function () {
-       initializeMap();
-       //showPopup('startPopContainer');
+       showPopup('startPopContainer');
 });
 
 const nameForm = document.querySelector('#playerForm');
 nameForm.addEventListener('submit', nameFormSubmit);
 
+const submitNameButton = document.querySelector('#submitName');
+submitNameButton.addEventListener('click', function () {
+    showPopup('difficultyPopContainer');
+})
 
-    // in the html file display name
+//get continent
 const submitDifficultyButton = document.querySelector('#submitContinent');
-//submitDifficultyButton.addEventListener('click', async function() {
-//     const selectedContinent = document.querySelector('input[name="Difficulty"]:checked').id;
-//     const data = {
-//         continent: selectedContinent
-//     };
-//
-//     fetch('/submit_continent', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(data)
-//     })
-//     .then(response => {
-//         if (response.ok) {
-//             return response.json();
-//         } else {
-//             throw new Error('Response failed');
-//         }
-//     })
-//         .then(aiportData => {
-//             //handle airport data
-//             airportData.forEach(airport => {
-//                 //do something
-//             })
-//         })
-//         .catch(error => {
-//             console.error('Error: ', error)
-//         });
-// });
-// })
+
+//create new game
+async function newGame(){
+        const data = {
+        body: JSON.stringify({
+            continent: continent,
+            player: player_name
+        }),
+        method: 'POST',
+        headers: {
+              'Content-type': 'application/json',
+        },
+    }
+    console.log('data:',data);
+
+    // send the data to flask
+    try {
+      const response = await fetch('http://127.0.0.1:5000/newgame', data);
+      if (!response.ok) throw new Error('Invalid input!');
+      const result = await response.json();
+      console.log('result',result);
+       airports_in_range = result.airports_in_range;
+       game_id=result.game.game_id;
+       current_airport_info=result.game
+       console.log(game_id)
+       console.log(current_airport_info)
+       console.log(airports_in_range)
+
+   } catch (e) {
+      console.log('error', e);
+   }
+}
+submitDifficultyButton.addEventListener('click', async function() {
+    continent = document.querySelector('input[name="Difficulty"]:checked').id;
+    await newGame();
+    closePopup('difficultyPopContainer');
+    initializeMap();
+});
 
 
 
@@ -258,7 +282,3 @@ submitButton.addEventListener('click', function() {
 });
 
 
-const submitNameButton = document.querySelector('#submitName');
-submitNameButton.addEventListener('click', function () {
-    showPopup('difficultyPopContainer');
-})
