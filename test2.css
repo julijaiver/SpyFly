@@ -1,0 +1,288 @@
+/*variables*/
+:root {
+    --black: #230909;
+    --white: #ffeeee;
+}
+
+@font-face {
+    font-family: 'Nova-square';
+    src: url("../Fonts/NovaSquare-Regular.ttf") format('truetype');
+}
+
+/*utilities*/
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.space-evenly {
+justify-content: space-evenly;
+}
+
+.responsive-image {
+    width: 100%;
+    height: auto;
+}
+
+/*---universal---*/
+html {
+    height: 100%;
+}
+
+body {
+    margin: auto;
+    font-family: Nova-square, sans-serif;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--white);
+}
+
+.container {
+    width: 100%;
+    padding: 5rem;
+    margin: auto;
+    background-image: url("photos/planeDark.png");
+    background-repeat: repeat;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--black);
+    color: var(--white);
+}
+
+.page-nav {
+    display: flex;
+    align-items: center;
+}
+
+.navElement {
+    width: 80px;
+    height: auto;
+    cursor: pointer;
+}
+
+.nav-link {
+    margin-right: 1rem;
+}
+
+.button {
+    display: block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 4px;
+    text-align: center;
+    transition: all 300ms;
+}
+
+
+.logo {
+    float: left;
+    padding: 1rem;
+
+}
+
+header, footer {
+    background-color: var(--black);
+    color: var(--white);
+    padding: 1rem;
+}
+
+
+footer {
+    margin-top: auto;
+}
+
+/*---game page---*/
+#map {
+    width: 45%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#data {
+    width: 35%;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 1rem;
+}
+
+#map{
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.3) 3px 3px 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 500px;
+    width: 700px;
+}
+
+.box {
+    margin: auto;
+    border: var(--white) ;
+    border-radius: 0.5rem;
+}
+
+.tb-head {
+    padding: 0.5rem;
+    text-align: center;
+    margin-bottom: auto;
+}
+td {
+    padding: 0.5rem;
+}
+
+table {
+    background-color: rgba(255, 238, 238, 0.6);
+    width: 24rem;
+}
+/*---about page---*/
+.about-photo {
+    width: 50%;
+}
+
+.about-game {
+    width: 40%;
+}
+/*---leaderboard page---*/
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+
+
+.overlay {
+    display:none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+}
+
+.popup {
+    display:none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#quizPopup.popup {
+    display: none;
+    width: 400px;
+    height: 400px;
+    background-image: url('../photos/PopupImg.png');
+    background-size: cover;
+    text-align: center;
+    transform: translate(-50%, -50%) scale(0.5); /* Initially set scale to 0.5 for the popping effect */
+    opacity: 0; /* Initially set opacity to 0 */
+    transition: transform 0.5s ease, opacity 0.5s ease; /* Apply transition for smooth effect */
+}
+
+#quizPopup.popup.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1); /* Set the scale back to 1 for full size */
+}
+
+.quiz-content {
+    font-family: Nova-square, sans-serif;
+    font-weight: bold;
+    padding: 65px;
+    color: black;
+}
+
+.pop-content img {
+    width: 100%;
+    height: auto;
+}
+
+#difficultyImg {
+    width: 100%;
+    height: auto;
+}
+
+#difficultyRadio {
+    position: absolute;
+    top: 53%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+}
+
+form {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    font-family: Nova-square, sans-serif;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+}
+
+#playersName {
+    font-family: Nova-square, sans-serif;
+    font-size: 18px;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid white;
+    text-align: center;
+    color: rgb(131, 131, 131);
+}
+
+.popup-button {
+    padding: 10px;
+    font-family: Nova-square, sans-serif;
+    font-size: 14px;
+    color: white;
+    background-color: rgb(77, 77, 77);
+    border-radius: 15px;
+}
+
+.popup-button:hover {
+    background-color: rgb(255, 255, 255, 0.4);
+}
+
+#submitName {
+    margin-top: 20px;
+}
+#submitContinent {
+    position: absolute;
+    top: 60%;
+    left: 42%;
+}
+
+#submitQuiz {
+    position: absolute;
+    top: 77%;
+    left: 42%;
+}
+
+#successButton {
+    position: absolute;
+    top: 68%;
+    left: 44%;
+}
+
+#caughtButton {
+    position: absolute;
+    top: 60%;
+    left: 43%;
+}
+
+#missionSuccess {
+    display: none;
+}
+
+footer {
+    text-align: center;
+}

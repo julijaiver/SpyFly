@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    <link href="test2.css" rel="stylesheet">
+</head>
+<body>
+<header class="page-header">
+    <img class="logo" src="photos/spyflyLogo.png" alt="spyfly">
+    <nav class="page-nav">
+        <a href="game_page.html" class="nav-link">
+            <img class="navElement" src="photos/gameLogo.png" alt="Game">
+        </a>
+        <a href="about_page.html" class="nav-link">
+            <img class="navElement" src="photos/aboutLogo.png" alt="About">
+        </a>
+        <a href="leaderboard_page.html" class="nav-link">
+            <img class="navElement" src="photos/top10.png" alt="Top 10">
+        </a>
+    </nav>
+</header>
+    <main class="flex-wrap">
+        <button class="popup-button" id="quizButton">QUIZ</button>
+<div class="container">
+<div class="overlay"></div>
+
+<div class="popup" id="startPopContainer">
+    <div class="pop-content" id="popContent">
+        <img src="../photos/startPop2.png" alt="Image">
+        <form id="playerForm">
+            <label for="enterName" id="enterName">ENTER PLAYER'S NAME</label><br>
+            <input type="text" id="playersName" required><br>
+            <button class="popup-button" id="submitName">SUBMIT</button>
+        </form>
+    </div>
+</div>
+
+<div class="popup" id="difficultyPopContainer">
+    <div class="quiz-content" id="difficultyPopContent">
+        <img id="difficultyImg" src="photos/difficultyPop.png" alt="Image">
+        <div id="difficultyRadio">
+            <input type="radio"  name="Difficulty" id="EU">
+            <label for="EU">EUROPE (easy)</label><br>
+            <input type="radio"  name="Difficulty" id="AF">
+            <label for="AF">AFRICA (harder)</label><br>
+            <input type="radio"  name="Difficulty" id="AS">
+            <label for="AS">ASIA (hard!!!)</label><br>
+        </div>
+        <button class="popup-button" id="submitContinent">START</button>
+    </div>
+</div>
+    <div id="map"></div>
+        <div id="data">
+            <section class="box">
+                <header class="tb-head">
+                    <h2>Player and Level</h2>
+                </header>
+                <table>
+                    <tr>
+                        <td>Player Name: (Name)</td>
+                    </tr>
+                    <tr>
+                        <td>Level: (Place)</td>
+                    </tr>
+                </table>
+            </section>
+            <section class="box">
+                <header class="tb-head">
+                    <h2>Location</h2>
+                </header>
+                <table>
+                    <tr>
+                        <td>Airport Name: (Airport)</td>
+                    </tr>
+                    <tr>
+                        <td>ICAO Code: (Code)</td>
+                    </tr>
+                </table>
+            </section>
+            <section class="box">
+                <header class="tb-head">
+                    <h2>Game State</h2>
+                </header>
+                <table>
+                    <tr>
+                        <td>Battery: 1000</td>
+                    </tr>
+                    <tr>
+                        <td>Score: 10</td>
+                    </tr>
+                </table>
+            </section>
+        </div>
+    </div>
+</main>
+    <footer id="game_footer">
+        <p>Game by Spy Fly Group of Metropolia</p>
+    </footer>
+<div class="popup" id="quizPopup">
+    <div class="quiz-content" id="quizContent">
+    </div>
+    <button class ="popup-button" id="submitQuiz">Submit</button>
+</div>
+
+<div class="popup" id="missionSuccess">
+    <div class="pop-content" id="successContent">
+        <img src="photos/successPop.png" alt="Image">
+        <button class="popup-button" id="successButton">YAY !!</button>
+    </div>
+</div>
+
+
+<div class="popup" id="gotCaught">
+    <div class="pop-content" id="caughtContent">
+        <img src="photos/caughtPop.png" alt="Image">
+        <button class="popup-button" id="caughtButton">Start Over</button>
+    </div>
+</div>
+
+
+<script src="test2.js"></script>
+</body>
+</html>
