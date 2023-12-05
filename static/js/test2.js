@@ -7,6 +7,7 @@ let airports_in_range;
 let game_id;
 let current_airport_icao;
 let current_airport_info;
+let current_airport_name;
 let battery= 6000;
 let score=0;
 let gameover = false;
@@ -105,7 +106,7 @@ function closePopup(id) {
 function updateScreenInfo(){
     document.querySelector("#player_name").innerText = player_name;
     document.querySelector("#level").innerText = document.querySelector(`label[for=${continent}]`).innerText;
-    document.querySelector("#airport_name").innerText = current_airport_info.airport_name;
+    document.querySelector("#airport_name").innerText = current_airport_name;
     document.querySelector("#icao_code").innerText = current_airport_icao;
     document.querySelector("#battery").innerText = battery.toString();
     document.querySelector("#score").innerHTML = score.toString();
@@ -117,33 +118,34 @@ function goal_checker_return(airport_name,battery,score){
 }
 
 function goal_checker(goal,airport_name,battery,score,distance){
+    current_airport_name=airport_name;
     battery = battery-distance;
     if (goal === 1) {
-        alert(`Weather seems to be clear and sunny in ${airport_name}. You get 5 points!`);
+        alert(`Weather seems to be clear and sunny in ${current_airport_name}. You get 5 points!`);
         score = score+5;
-        return goal_checker_return(airport_name,battery,score);
+        return goal_checker_return(current_airport_name,battery,score);
     } else if (goal === 2) {
         battery = battery-(distance*0.15);
         if(battery>=0){
-            alert(`Weather seems to be cloudy in ${airport_name} You get 10 points but use 15% more battery`);
+            alert(`Weather seems to be cloudy in ${current_airport_name} You get 10 points but use 15% more battery`);
             score=score+10;
-            return goal_checker_return(airport_name,battery,score);
+            return goal_checker_return(current_airport_name,battery,score);
         }else {
             alert('You did not make it to the destination because of the bad weather.');
             battery = 0;
-            airport_name="";
-            return goal_checker_return(airport_name,battery,score);
+            current_airport_name="";
+            return goal_checker_return(current_airport_name,battery,score);
         }
     } else if (goal === 3) {
-        if (confirm(`${airport_name} seems suspicious. 
+        if (confirm(`${current_airport_name} seems suspicious. 
         Do you want to play a minigame with a possibility to gain points and extra battery power and risk getting caught?`)) {
             startQuiz();
             overlay.style.display = 'block';
             quizPopupContainer.style.display = 'block';
-            return goal_checker_return(airport_name,battery,score);
+            return goal_checker_return(current_airport_name,battery,score);
         } else {
             alert("You didn't risk getting caught but you spend battery travelling here.");
-            return goal_checker_return(airport_name,battery,score);
+            return goal_checker_return(current_airport_name,battery,score);
         }
     }else{
         showPopup('gotCaught');
@@ -269,6 +271,7 @@ async function newGame(){
        game_id=result.game.game_id;
        current_airport_info=result.game;
        current_airport_icao=current_airport_info.current_airport;
+       current_airport_name=current_airport_info.airport_name;
        console.log(game_id)
        console.log(current_airport_info)
 
