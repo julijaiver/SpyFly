@@ -21,85 +21,84 @@
         <a href="about_page.html" class="nav-link">
             <img class="navElement" src="../static/photos/aboutLogo.png" alt="About">
         </a>
-        <a href="leaderboard_page.html" class="nav-link">
+        <a href="top10.html" class="nav-link">
             <img class="navElement" src="../static/photos/top10.png" alt="Top 10">
         </a>
     </nav>
 </header>
     <main class="flex-wrap">
-        <button class="popup-button" id="quizButton">QUIZ</button>
-<div class="container">
-<div class="overlay"></div>
+        <div class="container">
+        <div class="overlay"></div>
 
-<div class="popup" id="startPopContainer">
-    <div class="pop-content" id="popContent">
-        <img src="../static/photos/startPop2.png" alt="Image">
-        <form id="playerForm">
-            <label for="enterName" id="enterName">ENTER PLAYER'S NAME</label><br>
-            <input type="text" id="playersName" required><br>
-            <button class="popup-button" id="submitName">SUBMIT</button>
-        </form>
-    </div>
-</div>
+        <div class="popup" id="startPopContainer">
+            <div class="pop-content" id="popContent">
+                <img src="../static/photos/startPop2.png" alt="Image">
+                <form id="playerForm">
+                    <label for="enterName" id="enterName">ENTER PLAYER'S NAME</label><br>
+                    <input type="text" id="playersName" required><br>
+                    <button class="popup-button" id="submitName">SUBMIT</button>
+                </form>
+            </div>
+        </div>
 
-<div class="popup" id="difficultyPopContainer">
-    <div class="quiz-content" id="difficultyPopContent">
-        <img id="difficultyImg" src="../static/photos/difficultyPop.png" alt="Image">
-        <div id="difficultyRadio">
-            <input type="radio"  name="Difficulty" id="EU">
-            <label for="EU">EUROPE (easy)</label><br>
-            <input type="radio"  name="Difficulty" id="AF">
-            <label for="AF">AFRICA (harder)</label><br>
-            <input type="radio"  name="Difficulty" id="AS">
-            <label for="AS">ASIA (hard!!!)</label><br>
+        <div class="popup" id="difficultyPopContainer">
+            <div class="quiz-content" id="difficultyPopContent">
+                <img id="difficultyImg" src="../static/photos/difficultyPop.png" alt="Image">
+                <div id="difficultyRadio">
+                    <input type="radio"  name="Difficulty" id="EU">
+                    <label for="EU">EUROPE (easy)</label><br>
+                    <input type="radio"  name="Difficulty" id="AF">
+                    <label for="AF">AFRICA (harder)</label><br>
+                    <input type="radio"  name="Difficulty" id="AS">
+                    <label for="AS">ASIA (hard!!!)</label><br>
+                </div>
+                <button class="popup-button" id="submitContinent">START</button>
+            </div>
         </div>
-        <button class="popup-button" id="submitContinent">START</button>
-    </div>
-</div>
-    <div id="map"></div>
-        <div id="data">
-            <section class="box">
-                <header class="tb-head">
-                    <h2>Player and Level</h2>
-                </header>
-                <table>
-                    <tr>
-                        <td>Player Name: <span id="player_name"></span></td>
-                    </tr>
-                    <tr>
-                        <td>Level: <span id="level"></span></td>
-                    </tr>
-                </table>
-            </section>
-            <section class="box">
-                <header class="tb-head">
-                    <h2>Location</h2>
-                </header>
-                <table>
-                    <tr>
-                        <td>Airport Name: <span id="airport_name"></span></td>
-                    </tr>
-                    <tr>
-                        <td>ICAO Code: <span id="icao_code"></span></td>
-                    </tr>
-                </table>
-            </section>
-            <section class="box">
-                <header class="tb-head">
-                    <h2>Game State</h2>
-                </header>
-                <table>
-                    <tr>
-                        <td>Battery: <span id="battery"></span></td>
-                    </tr>
-                    <tr>
-                        <td>Score: <span id="score"></span></td>
-                    </tr>
-                </table>
-            </section>
-        </div>
-    </div>
-</main>
+            <div id="map"></div>
+                <div id="data">
+                    <section class="box">
+                        <header class="tb-head">
+                            <h2>Player and Level</h2>
+                        </header>
+                        <table>
+                            <tr>
+                                <td>Player Name: <span id="player_name"></span></td>
+                            </tr>
+                            <tr>
+                                <td>Level: <span id="level"></span></td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section class="box">
+                        <header class="tb-head">
+                            <h2>Location</h2>
+                        </header>
+                        <table>
+                            <tr>
+                                <td>Airport Name: <span id="airport_name"></span></td>
+                            </tr>
+                            <tr>
+                                <td>ICAO Code: <span id="icao_code"></span></td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section class="box">
+                        <header class="tb-head">
+                            <h2>Game State</h2>
+                        </header>
+                        <table>
+                            <tr>
+                                <td>Battery: <span id="battery"></span></td>
+                            </tr>
+                            <tr>
+                                <td>Score: <span id="score"></span></td>
+                            </tr>
+                        </table>
+                    </section>
+                </div>
+            </div>
+    </main>
     <footer id="game_footer">
         <p>Game by Spy Fly Group of Metropolia</p>
     </footer>
