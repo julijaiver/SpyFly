@@ -89,9 +89,7 @@ function initializeMap() {
 
 
 }
-
 //Popup doesn't close when mouse goes off
-
 
 function showPopup(id) {
     const popup = document.querySelector(`#${id}`);
@@ -117,6 +115,7 @@ function goal_checker_return(airport_name,battery,score){
     let checker_result = {'airport_name':airport_name,'battery':battery,'score':score};
     return checker_result;
 }
+
 function goal_checker(goal,airport_name,battery,score,distance){
     battery = battery-distance;
     if (goal === 1) {
@@ -368,9 +367,11 @@ function checkAnswers() {
 
         if (selectedValue === correctAnswer) {
             alert('Congratulations! You get 15 points and battery power');
-            //Adding points to the number on screen
             overlay.style.display = 'none';
             quizPopupContainer.style.display = 'none';
+            score += 15;
+            battery += 500;
+            updateScreenInfo();
         } else {
             overlay.style.display = 'none';
             quizPopupContainer.style.display = 'none';
@@ -384,3 +385,6 @@ function checkAnswers() {
 submitButton.addEventListener('click', function() {
     checkAnswers();
 });
+
+
+
