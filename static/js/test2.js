@@ -69,11 +69,53 @@ function initializeMap() {
                     const result = await fetchData('http://127.0.0.1:5000/checkgoal',goal_data);
                     console.log('result',result);
                     const goal_in_airport= parseInt(result.goal);
-                    goal_checker(goal_in_airport,airport.airport_data[0]['name'],battery,score,airport.distance);
+                    console.log(goal_in_airport);
+                    console.log(airport.airport_data[0]['name']);
+                    console.log(battery);
+                    console.log(score);
+                    console.log(airport.distance);
+                    const goal_checker_result = goal_checker(goal_in_airport,airport.airport_data[0]['name'],battery,score,airport.distance);
+                    console.log(goal_checker_result);
+                    /*if(goal_checker_result['airport_name'] === ""){
+                        current_airport_icao = "";
+                    }*/
+                    current_airport_icao= airport.airport_data[0]['ident'];
+                    console.log(goal_checker_result);
+                    battery= goal_checker_result['battery'];
+                    score=goal_checker_result['score'];
 
                 } catch (e) {
                     console.log('error', e);
                 }
+                async function flyto(){
+                    const data = {
+                        body: JSON.stringify({
+                        battery: battery,
+                        location:current_airport_icao,
+                        game_id:game_id,
+                        score:score,
+                    }),
+                    method: 'POST',
+                    headers: {
+                          'Content-type': 'application/json',
+                    },
+                }
+                console.log('data:',data);
+
+                // send the data to flask
+                try {
+                  const result = await fetchData('http://127.0.0.1:5000/flyto',data)
+                  console.log('result',result);
+                   airports_in_range = result.airports_in_range;
+                   current_airport_info=result.game;
+                   console.log(game_id);
+                   console.log(current_airport_info);
+                   initializeMap();
+               } catch (e) {
+                  console.log('error', e);
+               }
+            }
+
             })
         }
         // Function to close the popup
@@ -121,20 +163,28 @@ function updateScreenInfo(){
     document.querySelector("#battery").innerText = battery.toString();
     document.querySelector("#score").innerHTML = score.toString();
 }
+
+function goal_checker_return(airport_name,battery,score){
+    let checker_result = {'airport_name':airport_name,'battery':battery,'score':score};
+    return checker_result;
+}
 function goal_checker(goal,airport_name,battery,score,distance){
     battery = battery-distance;
     if (goal === 1) {
         alert(`Weather seems to be clear and sunny in ${airport_name}. You get 5 points!`);
         score = score+5;
+        return goal_checker_return(airport_name,battery,score);
     } else if (goal === 2) {
         battery = battery-(distance*0.15);
         if(battery>=0){
             alert(`Weather seems to be cloudy in ${airport_name} You get 10 points but use 15% more battery`);
             score=score+10;
+            return goal_checker_return(airport_name,battery,score);
         }else {
             alert('You did not make it to the destination because of the bad weather.');
             battery = 0;
             airport_name="";
+            return goal_checker_return(airport_name,battery,score);
         }
     } else if (goal === 3) {
         if (confirm(`${airport_name} seems suspicious. 
@@ -142,8 +192,10 @@ function goal_checker(goal,airport_name,battery,score,distance){
             startQuiz();
             overlay.style.display = 'block';
             quizPopupContainer.style.display = 'block';
+            return goal_checker_return(airport_name,battery,score);
         } else {
             alert("You didn't risk getting caught but you spend battery travelling here.");
+            return goal_checker_return(airport_name,battery,score);
         }
     }else{
         showPopup('gotCaught');
@@ -218,14 +270,11 @@ submitDifficultyButton.addEventListener('click', async function() {
 });
 
 
-
-
 //showPopup('missionSuccess');
 //success button.eventlistener. when clicked game starts again (if points == leaderboard then show)
 
 //showPopup('gotCaught');
 
-const quizButton = document.querySelector('#quizButton');
 const quizPopupContainer = document.querySelector('#quizPopup');
 const quizContent = document.querySelector('#quizContent');
 const submitButton = document.querySelector('#submitQuiz');
@@ -291,11 +340,7 @@ async function startQuiz() {
         console.error(error);
     }
 }
-quizButton.addEventListener('click', function() {
-    startQuiz();
-    overlay.style.display = 'block'; // Show the dark overlay
-    quizPopupContainer.style.display = 'block'; // Show the popup window
-});
+
 
 function checkAnswers() {
     const selectedAnswer = document.querySelector('input[name="answer"]:checked');
