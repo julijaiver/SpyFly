@@ -9,22 +9,32 @@ let current_airport_icao;
 let current_airport_info;
 let battery= 6000;
 let score=0;
+let gameover = false;
+let map;
 const overlay = document.querySelector('.overlay');
 const popup = document.querySelector('.popup');
 function initializeMap() {
-    const map = L.map('map').setView([current_airport_info.latitude, current_airport_info.longitude], 5);
+    if(map){
+        map.eachLayer(layer =>{
+            layer.remove();
+        });
+        map.off();
+        map.remove();
+    }
+    console.log('before creating a new map')
+    map = L.map('map').setView([current_airport_info.latitude, current_airport_info.longitude], 5);
 
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         maxZoom: 20,
     }).addTo(map);
 
-    const redMarker = L.icon({
+    let redMarker = L.icon({
         iconUrl: 'static/photos/roundMarker.png',
         iconSize: [50, 50],
         iconAnchor: [25, 20]
     });
 
-    const greenMarker = L.icon({
+    let greenMarker = L.icon({
         iconUrl: 'static/photos/marker2.png',
         iconSize: [50, 50],
         iconAnchor: [25, 20]
@@ -51,75 +61,12 @@ function initializeMap() {
             marker.bindPopup(popupContent);
 
             flyButton.addEventListener('click',async function(){
-                if(!airports_in_range){
-                    await newGame();
-                }
-                const goal_data = {
-                    body: JSON.stringify({
-                        destination: airport.airport_data[0]['ident'],
-                        game_id:game_id
-                    }),
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json',
-                    },
-                };
-                console.log('data:',goal_data);
-                try {
-                    const result = await fetchData('http://127.0.0.1:5000/checkgoal',goal_data);
-                    console.log('result',result);
-                    const goal_in_airport= parseInt(result.goal);
-                    console.log(goal_in_airport);
-                    console.log(airport.airport_data[0]['name']);
-                    console.log(battery);
-                    console.log(score);
-                    console.log(airport.distance);
-                    const goal_checker_result = goal_checker(goal_in_airport,airport.airport_data[0]['name'],battery,score,airport.distance);
-                    console.log(goal_checker_result);
-                    if(goal_checker_result['airport_name'] === ""){
-                        current_airport_icao = "";
-                    }
-                    current_airport_icao= airport.airport_data[0]['ident'];
-                    console.log(goal_checker_result);
-                    battery= goal_checker_result['battery'];
-                    score=goal_checker_result['score'];
-                    updateScreenInfo();
-                } catch (e) {
-                    console.log('error', e);
-                }
-
-                //flyto is not working here because we cannot use initializemap inside initializemap. need to get this fixed somehow.
-                async function flyto(){
-                    const data = {
-                        body: JSON.stringify({
-                        battery: battery,
-                        location:current_airport_icao,
-                        game_id:game_id,
-                        score:score,
-                    }),
-                    method: 'POST',
-                    headers: {
-                          'Content-type': 'application/json',
-                    },
-                }
-                console.log('data:',data);
-
-                // send the data to flask
-                try {
-                  const result = await fetchData('http://127.0.0.1:5000/flyto',data)
-                  console.log('result',result);
-                   airports_in_range = result.airports_in_range;
-                   current_airport_info=result.game;
-                   console.log(game_id);
-                   console.log(current_airport_info);
-                   initializeMap();
-               } catch (e) {
-                  console.log('error', e);
-               }
-            }
-
+                await goal_check(airport);
+                await flyto();
+                initializeMap();
             })
         }
+
         // Function to close the popup
     function closeMarkerPopup() {
             if (!map.getBounds().contains(marker.getLatLng())) {
@@ -218,6 +165,74 @@ async function nameFormSubmit(evt) {
     popup.style.display = 'none';
 }
 
+async function goal_check(airport){
+    if(!airports_in_range){
+        await newGame();
+    }
+    const goal_data = {
+    body: JSON.stringify({
+    destination: airport.airport_data[0]['ident'],
+    game_id:game_id
+    }),
+    method: 'POST',
+    headers: {
+        'Content-type': 'application/json'
+    },
+    }
+    console.log('data:',goal_data);
+    try {
+        const result = await fetchData('http://127.0.0.1:5000/checkgoal', goal_data);
+        console.log('result', result);
+        const goal_in_airport = parseInt(result.goal);
+        console.log(goal_in_airport);
+        console.log(airport.airport_data[0]['name']);
+        console.log(battery);
+        console.log(score);
+        console.log(airport.distance);
+        const goal_checker_result = goal_checker(goal_in_airport, airport.airport_data[0]['name'], battery, score, airport.distance);
+        console.log(goal_checker_result);
+        if (goal_checker_result['airport_name'] === "") {
+            current_airport_icao = "";
+        }
+        current_airport_icao = airport.airport_data[0]['ident'];
+        console.log(goal_checker_result);
+        battery = goal_checker_result['battery'];
+        score = goal_checker_result['score'];
+        updateScreenInfo();
+    }catch (e) {
+        console.log('error', e);
+    }
+}
+async function flyto(){
+    const data = {
+                        body: JSON.stringify({
+                            battery: battery,
+                            location:current_airport_icao,
+                            game_id:game_id,
+                            score:score,
+                        }),
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                        },
+                    }
+                    console.log('data:',data);
+
+                    // send the data to flask
+                    try {
+                  const result = await fetchData('http://127.0.0.1:5000/flyto',data)
+                  console.log('result',result);
+                   airports_in_range = result.airports_in_range;
+                   current_airport_info=result.game;
+                   console.log(game_id);
+                   console.log(current_airport_info);
+               } catch (e) {
+                  console.log('error', e);
+               }
+}
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
        showPopup('startPopContainer');
 });
@@ -270,6 +285,7 @@ submitDifficultyButton.addEventListener('click', async function() {
     closePopup('difficultyPopContainer');
     initializeMap();
 });
+
 
 
 //showPopup('missionSuccess');
