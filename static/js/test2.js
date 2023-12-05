@@ -76,17 +76,19 @@ function initializeMap() {
                     console.log(airport.distance);
                     const goal_checker_result = goal_checker(goal_in_airport,airport.airport_data[0]['name'],battery,score,airport.distance);
                     console.log(goal_checker_result);
-                    /*if(goal_checker_result['airport_name'] === ""){
+                    if(goal_checker_result['airport_name'] === ""){
                         current_airport_icao = "";
-                    }*/
+                    }
                     current_airport_icao= airport.airport_data[0]['ident'];
                     console.log(goal_checker_result);
                     battery= goal_checker_result['battery'];
                     score=goal_checker_result['score'];
-
+                    updateScreenInfo();
                 } catch (e) {
                     console.log('error', e);
                 }
+
+                //flyto is not working here because we cannot use initializemap inside initializemap. need to get this fixed somehow.
                 async function flyto(){
                     const data = {
                         body: JSON.stringify({
@@ -366,5 +368,3 @@ function checkAnswers() {
 submitButton.addEventListener('click', function() {
     checkAnswers();
 });
-
-
