@@ -49,13 +49,38 @@ function initializeMap() {
             flyButton.innerHTML = 'FLY';
             popupContent.append(flyButton);
             marker.bindPopup(popupContent);
-        }
 
+            flyButton.addEventListener('click',async function(){
+                if(!airports_in_range){
+                    await newGame();
+                }
+                const goal_data = {
+                    body: JSON.stringify({
+                        destination: airport.airport_data[0]['ident'],
+                        game_id:game_id
+                    }),
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                };
+                console.log('data:',goal_data);
+                try {
+                    const result = await fetchData('http://127.0.0.1:5000/checkgoal',goal_data);
+                    console.log('result',result);
+                    const goal_in_airport= parseInt(result.goal);
+                    goal_checker(goal_in_airport,airport.airport_data[0]['name'],battery,score,airport.distance);
+
+                } catch (e) {
+                    console.log('error', e);
+                }
+            })
+        }
         // Function to close the popup
     function closeMarkerPopup() {
-        if (!map.getBounds().contains(marker.getLatLng())) {
-            marker.closePopup();
-        }
+            if (!map.getBounds().contains(marker.getLatLng())) {
+                marker.closePopup();
+            }
     }
 
     // Event listeners for the marker and popup
@@ -70,13 +95,12 @@ function initializeMap() {
     marker.getPopup().on('mouseout', function () {
         closeMarkerPopup();
     });
+
+
 }
 
 //Popup doesn't close when mouse goes off
 
-
-// Need to set initial coordinates with database random loc.
-//const map = L.map('map').setView([51.505, -0.09], 13);
 
 function showPopup(id) {
     const popup = document.querySelector(`#${id}`);
@@ -97,37 +121,48 @@ function updateScreenInfo(){
     document.querySelector("#battery").innerText = battery.toString();
     document.querySelector("#score").innerHTML = score.toString();
 }
+function goal_checker(goal,airport_name,battery,score,distance){
+    battery = battery-distance;
+    if (goal === 1) {
+        alert(`Weather seems to be clear and sunny in ${airport_name}. You get 5 points!`);
+        score = score+5;
+    } else if (goal === 2) {
+        battery = battery-(distance*0.15);
+        if(battery>=0){
+            alert(`Weather seems to be cloudy in ${airport_name} You get 10 points but use 15% more battery`);
+            score=score+10;
+        }else {
+            alert('You did not make it to the destination because of the bad weather.');
+            battery = 0;
+            airport_name="";
+        }
+    } else if (goal === 3) {
+        if (confirm(`${airport_name} seems suspicious. 
+        Do you want to play a minigame with a possibility to gain points and extra battery power and risk getting caught?`)) {
+            startQuiz();
+            overlay.style.display = 'block';
+            quizPopupContainer.style.display = 'block';
+        } else {
+            alert("You didn't risk getting caught but you spend battery travelling here.");
+        }
+    }else{
+        showPopup('gotCaught');
+    }
+}
+async function fetchData (url,data) {
+    const response = await fetch(url,data);
+    if (!response.ok) throw new Error('Invalid server input');
+    const json_result = await response.json();
+    return json_result
+}
+
 async function nameFormSubmit(evt) {
     evt.preventDefault();
     player_name = document.querySelector('#playersName').value;
     //const nameDisplay = document.querySelector('#displayName');
     //nameDisplay.append(name);
     popup.style.display = 'none';
-
-
-     //ajax to connect to flask
-//     try {
-//         await fetch('/name', {
-//             method: 'POST',
-//             headers: {
-//             'Content-Type': 'application/json'
-//         },
-//             body: JSON.stringify({name: name})
-//         })
-//             .then(response => {
-//                 if (response.ok) {
-//                     overlay.style.display = 'none';
-//                     const popup = document.querySelector('#startPopContainer');
-//                     popup.style.display = 'none';
-//                 } else {
-//                     throw new Error('Submission failed.');
-//                 }
-//             })
-//     } catch (error) {
-//         alert('Error: ' + error.message);
-//     }
- }
-
+}
 
 document.addEventListener('DOMContentLoaded', function () {
        showPopup('startPopContainer');
@@ -160,9 +195,7 @@ async function newGame(){
 
     // send the data to flask
     try {
-      const response = await fetch('http://127.0.0.1:5000/newgame', data);
-      if (!response.ok) throw new Error('Invalid input!');
-      const result = await response.json();
+      const result = await fetchData('http://127.0.0.1:5000/newgame',data)
       console.log('result',result);
        airports_in_range = result.airports_in_range;
        game_id=result.game.game_id;
@@ -175,6 +208,7 @@ async function newGame(){
       console.log('error', e);
    }
 }
+
 submitDifficultyButton.addEventListener('click', async function() {
     continent = document.querySelector('input[name="Difficulty"]:checked').id;
     await newGame();
@@ -210,9 +244,7 @@ async function fetchQuizData() {
     };
 
     try {
-        const response = await fetch(url, options);
-        const result = await response.json();
-        return result;
+        return fetchData(url, options);
     } catch (error) {
         throw new Error(error);
     }
