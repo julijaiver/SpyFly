@@ -156,6 +156,7 @@ function goal_checker(goal,airport_name,battery,score,distance){
     }else{
         showPopup('gotCaught');
         gameOver = true;
+        endGame();
     }
 }
 async function fetchData (url,data) {
