@@ -396,8 +396,13 @@ function endGame() {
     if (gameOver) {
         if (score >= 100) {
             alert(`Game over. You have ${score} points. Your mission was successful!`);
+            showPopup('missionSuccess');
+            document.querySelector("#successButton").addEventListener('click',function(){
+                location.reload();
+            })
         } else {
             alert(`Game over. You have ${score} points. That's not enough for a successful mission. Try again!`);
+            location.reload();
         }
     }
 }
