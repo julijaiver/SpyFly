@@ -65,7 +65,7 @@ function initializeMap() {
             h4.innerHTML = `Name: ${airport.airport_data[0]['name']};`
             popupContent.append(h4);
             const p = document.createElement('p');
-            p.innerHTML = `Distance: ${airport.distance} km`;
+            p.innerHTML = `Distance: ${airport.distance.toFixed(2)} km`;
             popupContent.append(p);
             const flyButton = document.createElement('button');
             flyButton.classList.add('popup-button');
