@@ -33,7 +33,8 @@ function initializeMap() {
         gameOver=true;
         endGame();
     }
-    console.log('before creating a new map')
+
+    //adding markers to the map
     map = L.map('map').setView([current_airport_info.latitude, current_airport_info.longitude], 5);
 
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -73,6 +74,7 @@ function initializeMap() {
             popupContent.append(flyButton);
             marker.bindPopup(popupContent);
 
+            //check the goal of destination airport and fly to the airport.
             flyButton.addEventListener('click',async function(){
                 await goal_check(airport);
                 await flyto();
@@ -99,16 +101,15 @@ function initializeMap() {
     marker.getPopup().on('mouseout', function () {
         closeMarkerPopup();
     });
-
-
 }
-//Popup doesn't close when mouse goes off
 
+//function for showing the popup
 function showPopup(id) {
     const popup = document.querySelector(`#${id}`);
     overlay.style.display = 'block';
     popup.style.display = 'block';
 }
+//function for closing the popup
 function closePopup(id) {
     const popup = document.querySelector(`#${id}`);
     overlay.style.display = 'none';
@@ -124,11 +125,43 @@ function updateScreenInfo(){
     document.querySelector("#score").innerHTML = score.toString();
 }
 
-function goal_outcome_return(airport_name,battery,score){
-    let checker_result = {'airport_name':airport_name,'battery':battery,'score':score};
-    return checker_result;
+//create new game
+async function newGame(){
+        const data = {
+        body: JSON.stringify({
+            continent: continent,
+            player: player_name
+        }),
+        method: 'POST',
+        headers: {
+              'Content-type': 'application/json',
+        },
+    }
+    console.log('data:',data);
+
+    // send the data to flask
+    try {
+      const result = await fetchData('http://127.0.0.1:5000/newgame',data)
+      console.log('result',result);
+       airports_in_range = result.airports_in_range;
+       game_id=result.game.game_id;
+       current_airport_info=result.game;
+       current_airport_icao=current_airport_info.current_airport;
+       current_airport_name=current_airport_info.airport_name;
+       console.log(game_id)
+       console.log(current_airport_info)
+
+   } catch (e) {
+      console.log('error', e);
+   }
 }
 
+//function for returning dictionary format of airport_name, battery, and score.
+function goal_outcome_return(airport_name,battery,score){
+    return {'airport_name':airport_name,'battery':battery,'score':score};
+}
+
+//function for updating the info based on goals and return the goal outcome.
 function goal_outcome(goal,airport_name,battery,score,distance){
     current_airport_name=airport_name;
     battery = battery-distance;
@@ -166,6 +199,8 @@ function goal_outcome(goal,airport_name,battery,score,distance){
         endGame();
     }
 }
+
+//async function for fetching data via url
 async function fetchData (url,data) {
     const response = await fetch(url,data);
     if (!response.ok) throw new Error('Invalid server input');
@@ -173,6 +208,7 @@ async function fetchData (url,data) {
     return json_result
 }
 
+//async function for retrieving player's name and hide popup.
 async function nameFormSubmit(evt) {
     evt.preventDefault();
     player_name = document.querySelector('#playersName').value;
@@ -181,6 +217,7 @@ async function nameFormSubmit(evt) {
     popup.style.display = 'none';
 }
 
+//async function for checking the goal in airport from the backend.
 async function goal_check(airport){
     if(!airports_in_range){
         // gameOver = true;
@@ -221,6 +258,8 @@ async function goal_check(airport){
         console.log('error', e);
     }
 }
+
+//async function to flyto the destination airport and sending data to the backend and update sql.
 async function flyto(){
     const data = {
                         body: JSON.stringify({
@@ -251,7 +290,7 @@ async function flyto(){
 
 
 
-
+//async function to retrieve rank info from sql.
 async function rank(){
     try{
         const response = await fetch('http://127.0.0.1:5000/rank');
@@ -263,76 +302,7 @@ async function rank(){
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-       showPopup('startPopContainer');
-});
-
-const nameForm = document.querySelector('#playerForm');
-nameForm.addEventListener('submit', nameFormSubmit);
-
-const submitNameButton = document.querySelector('#submitName');
-submitNameButton.addEventListener('click', function () {
-    showPopup('difficultyPopContainer');
-})
-
-//get continent
-const submitDifficultyButton = document.querySelector('#submitContinent');
-
-//create new game
-async function newGame(){
-        const data = {
-        body: JSON.stringify({
-            continent: continent,
-            player: player_name
-        }),
-        method: 'POST',
-        headers: {
-              'Content-type': 'application/json',
-        },
-    }
-    console.log('data:',data);
-
-    // send the data to flask
-    try {
-      const result = await fetchData('http://127.0.0.1:5000/newgame',data)
-      console.log('result',result);
-       airports_in_range = result.airports_in_range;
-       game_id=result.game.game_id;
-       current_airport_info=result.game;
-       current_airport_icao=current_airport_info.current_airport;
-       current_airport_name=current_airport_info.airport_name;
-       console.log(game_id)
-       console.log(current_airport_info)
-
-   } catch (e) {
-      console.log('error', e);
-   }
-}
-
-//if (airports_in_range.length === 0) gameOver = true;
-
-submitDifficultyButton.addEventListener('click', async function() {
-    continent = document.querySelector('input[name="Difficulty"]:checked').id;
-    await newGame();
-    updateScreenInfo();
-    closePopup('difficultyPopContainer');
-    initializeMap();
-});
-
-
-
-//showPopup('missionSuccess');
-//success button.eventlistener. when clicked game starts again (if points == leaderboard then show)
-
-//showPopup('gotCaught');
-
-const quizPopupContainer = document.querySelector('#quizPopup');
-const quizContent = document.querySelector('#quizContent');
-const submitButton = document.querySelector('#submitQuiz');
-let quizData = []; // Holds the quiz data array
-let currentQuestionData; // Holds the current question data
-//later to be changed to different event
-
+//using external API (Quiz game) for our project.
 async function fetchQuizData() {
     const url = 'https://quiz26.p.rapidapi.com/questions';
     const options = {
@@ -350,6 +320,7 @@ async function fetchQuizData() {
     }
 }
 
+// getting random questions from the quiz API and created our own quiz styles
 function displayRandQuestion() {
     if (quizData.length === 0) {
         console.log('No more questions.');
@@ -382,6 +353,7 @@ function displayRandQuestion() {
     quizContent.appendChild(questionDiv);
 }
 
+//make quiz popup visible and display quiz questions.
 async function startQuiz() {
     try {
         quizData = await fetchQuizData();
@@ -393,6 +365,7 @@ async function startQuiz() {
 }
 
 
+//function to check the answer and display consequent results based on wrong/correct answer.
 function checkAnswers() {
     const selectedAnswer = document.querySelector('input[name="answer"]:checked');
     if (selectedAnswer) {
@@ -418,10 +391,7 @@ function checkAnswers() {
     }
 }
 
-submitButton.addEventListener('click', function() {
-    checkAnswers();
-});
-
+//function for ending game and checking the score.
 function endGame() {
     if (gameOver) {
         if (score >= 100) {
@@ -431,6 +401,49 @@ function endGame() {
         }
     }
 }
+
+//main program starts here.
+document.addEventListener('DOMContentLoaded', function () {
+       showPopup('startPopContainer');
+});
+
+const nameForm = document.querySelector('#playerForm');
+nameForm.addEventListener('submit', nameFormSubmit);
+
+const submitNameButton = document.querySelector('#submitName');
+submitNameButton.addEventListener('click', function () {
+    showPopup('difficultyPopContainer');
+})
+
+//get continent
+const submitDifficultyButton = document.querySelector('#submitContinent');
+
+
+submitDifficultyButton.addEventListener('click', async function() {
+    continent = document.querySelector('input[name="Difficulty"]:checked').id;
+    await newGame();
+    updateScreenInfo();
+    closePopup('difficultyPopContainer');
+    initializeMap();
+});
+
+
+
+//showPopup('missionSuccess');
+//success button.eventlistener. when clicked game starts again (if points == leaderboard then show)
+
+//showPopup('gotCaught');
+
+const quizPopupContainer = document.querySelector('#quizPopup');
+const quizContent = document.querySelector('#quizContent');
+const submitButton = document.querySelector('#submitQuiz');
+let quizData = []; // Holds the quiz data array
+let currentQuestionData; // Holds the current question data
+//later to be changed to different event
+
+submitButton.addEventListener('click', function() {
+    checkAnswers();
+});
 
 const startOverButton = document.querySelector('#caughtButton');
 startOverButton.addEventListener('click', function () {
