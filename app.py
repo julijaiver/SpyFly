@@ -30,7 +30,7 @@ config.conn = mysql.connector.connect(
          autocommit=True
          )
 
-
+#define function fly to control the fly. Return current game data and return a lists of airports_in_range.
 def fly(location,game_id,battery,score,continent=None,player=None):
     # create game or update game information
     returnables = {}
@@ -76,6 +76,17 @@ def location_goal(game_id, location):
     result = cursor.fetchone()
     return result
 
+#get top 10 rank from the saved data
+def get_rank():
+    sql = ("SELECT id,screen_name,score FROM game WHERE score >=100 ORDER BY score DESC limit 10;")
+    cursor = config.conn.cursor(dictionary=True)
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    dictionary_result = {}
+    for i,result in enumerate(results):
+        dictionary_result[i+1] = result
+    return dictionary_result
+
 #create home page route
 @app.route('/')
 def home():
@@ -97,7 +108,7 @@ def newgame():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
+#create route for checking the goal in the destination airport.
 @app.route('/checkgoal', methods=['GET','POST'])
 def checkgoal():
     try:
@@ -117,7 +128,7 @@ def checkgoal():
         return jsonify({"error": str(e)}), 500
 
 
-
+#route for flying to the destination airport.
 @app.route('/flyto', methods=['GET','POST'])
 def flyto():
     try:
@@ -135,5 +146,12 @@ def flyto():
         return jsonify({"error": str(e)}), 500
 
 
+#route for get rank
+@app.route('/rank')
+def rank():
+        result = get_rank()
+        return jsonify(result),200
+
+#run the app.
 if __name__ == '__main__':
     app.run(use_reloader=True, host='127.0.0.1', port=5000, debug=True)

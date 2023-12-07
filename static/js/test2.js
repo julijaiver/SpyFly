@@ -251,6 +251,18 @@ async function flyto(){
 
 
 
+
+async function rank(){
+    try{
+        const response = await fetch('http://127.0.0.1:5000/rank');
+        if (!response.ok) throw new Error('Invalid server input');
+        const json_result = await response.json();
+        console.log('result',json_result);
+    } catch (e) {
+        console.log('error', e);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
        showPopup('startPopContainer');
 });
