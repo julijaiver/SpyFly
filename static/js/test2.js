@@ -10,7 +10,7 @@ let current_airport_info;
 let current_airport_name;
 let battery= 6000;
 let score=0;
-let gameover = false;
+let gameOver = false;
 let map;
 const overlay = document.querySelector('.overlay');
 const popup = document.querySelector('.popup');
@@ -134,6 +134,7 @@ function goal_checker(goal,airport_name,battery,score,distance){
             alert('You did not make it to the destination because of the bad weather.');
             battery = 0;
             current_airport_name="";
+            gameOver = true;
             return goal_checker_return(current_airport_name,battery,score);
         }
     } else if (goal === 3) {
@@ -149,6 +150,7 @@ function goal_checker(goal,airport_name,battery,score,distance){
         }
     }else{
         showPopup('gotCaught');
+        gameOver = true;
     }
 }
 async function fetchData (url,data) {
@@ -168,6 +170,8 @@ async function nameFormSubmit(evt) {
 
 async function goal_check(airport){
     if(!airports_in_range){
+        // gameOver = true;
+        // endGame();
         await newGame();
     }
     const goal_data = {
@@ -280,6 +284,8 @@ async function newGame(){
    }
 }
 
+//if (airports_in_range.length === 0) gameOver = true;
+
 submitDifficultyButton.addEventListener('click', async function() {
     continent = document.querySelector('input[name="Difficulty"]:checked').id;
     await newGame();
@@ -379,6 +385,8 @@ function checkAnswers() {
             overlay.style.display = 'none';
             quizPopupContainer.style.display = 'none';
             showPopup('gotCaught');
+            gameOver = true;
+            endGame();
         }
     } else {
         alert('Please select an answer.');
@@ -389,5 +397,18 @@ submitButton.addEventListener('click', function() {
     checkAnswers();
 });
 
+function endGame() {
+    if (gameOver) {
+        if (score >= 100) {
+            alert(`Game over. You have ${score} points. Your mission was successful!`);
+        } else {
+            alert(`Game over. You have ${score} points. That's not enough for a successful mission. Try again!`);
+        }
+    }
+}
 
-
+const startOverButton = document.querySelector('#caughtButton');
+startOverButton.addEventListener('click', function () {
+    closePopup('gotCaught');
+    location.reload();
+})
