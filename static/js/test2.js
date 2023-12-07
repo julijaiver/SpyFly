@@ -120,7 +120,7 @@ function updateScreenInfo(){
     document.querySelector("#level").innerText = document.querySelector(`label[for=${continent}]`).innerText;
     document.querySelector("#airport_name").innerText = current_airport_name;
     document.querySelector("#icao_code").innerText = current_airport_icao;
-    document.querySelector("#battery").innerText = battery.toString();
+    document.querySelector("#battery").innerText = battery.toFixed(2).toString();
     document.querySelector("#score").innerHTML = score.toString();
 }
 
@@ -424,4 +424,5 @@ const startOverButton = document.querySelector('#caughtButton');
 startOverButton.addEventListener('click', function () {
     closePopup('gotCaught');
     location.reload();
+    gameOver=false;
 })
