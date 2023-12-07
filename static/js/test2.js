@@ -22,6 +22,11 @@ function initializeMap() {
         map.off();
         map.remove();
     }
+    console.log(airports_in_range.length);
+    if(airports_in_range.length === 0){
+        gameOver=true;
+        endGame();
+    }
     console.log('before creating a new map')
     map = L.map('map').setView([current_airport_info.latitude, current_airport_info.longitude], 5);
 
