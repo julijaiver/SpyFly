@@ -14,7 +14,11 @@ let gameOver = false;
 let map;
 const overlay = document.querySelector('.overlay');
 const popup = document.querySelector('.popup');
+
+//functions needed for the game.
+//initialize the map.
 function initializeMap() {
+    //clear the existing markers on the map.
     if(map){
         map.eachLayer(layer =>{
             layer.remove();
@@ -23,6 +27,8 @@ function initializeMap() {
         map.remove();
     }
     console.log(airports_in_range.length);
+
+    //check if there is any airports in the range. If not, then game over is true.
     if(airports_in_range.length === 0){
         gameOver=true;
         endGame();
@@ -51,6 +57,7 @@ function initializeMap() {
         marker.bindPopup(`You are here: <br>${current_airport_info.airport_name}</br>`);
         marker.openPopup();
 
+        //iterates the airport and add them into the maps.
         for(let airport of airports_in_range){
             marker = L.marker([airport.airport_data[0]['latitude_deg'], airport.airport_data[0]['longitude_deg']], {icon: redMarker}).addTo(map);
             const popupContent = document.createElement('div');
@@ -117,30 +124,30 @@ function updateScreenInfo(){
     document.querySelector("#score").innerHTML = score.toString();
 }
 
-function goal_checker_return(airport_name,battery,score){
+function goal_outcome_return(airport_name,battery,score){
     let checker_result = {'airport_name':airport_name,'battery':battery,'score':score};
     return checker_result;
 }
 
-function goal_checker(goal,airport_name,battery,score,distance){
+function goal_outcome(goal,airport_name,battery,score,distance){
     current_airport_name=airport_name;
     battery = battery-distance;
     if (goal === 1) {
         alert(`Weather seems to be clear and sunny in ${current_airport_name}. You get 5 points!`);
         score = score+5;
-        return goal_checker_return(current_airport_name,battery,score);
+        return goal_outcome_return(current_airport_name,battery,score);
     } else if (goal === 2) {
         battery = battery-(distance*0.15);
         if(battery>=0){
             alert(`Weather seems to be cloudy in ${current_airport_name} You get 10 points but use 15% more battery`);
             score=score+10;
-            return goal_checker_return(current_airport_name,battery,score);
+            return goal_outcome_return(current_airport_name,battery,score);
         }else {
             alert('You did not make it to the destination because of the bad weather.');
             battery = 0;
             current_airport_name="";
             gameOver = true;
-            return goal_checker_return(current_airport_name,battery,score);
+            return goal_outcome_return(current_airport_name,battery,score);
         }
     } else if (goal === 3) {
         if (confirm(`${current_airport_name} seems suspicious. 
@@ -148,10 +155,10 @@ function goal_checker(goal,airport_name,battery,score,distance){
             startQuiz();
             overlay.style.display = 'block';
             quizPopupContainer.style.display = 'block';
-            return goal_checker_return(current_airport_name,battery,score);
+            return goal_outcome_return(current_airport_name,battery,score);
         } else {
             alert("You didn't risk getting caught but you spend battery travelling here.");
-            return goal_checker_return(current_airport_name,battery,score);
+            return goal_outcome_return(current_airport_name,battery,score);
         }
     }else{
         showPopup('gotCaught');
@@ -200,15 +207,15 @@ async function goal_check(airport){
         console.log(battery);
         console.log(score);
         console.log(airport.distance);
-        const goal_checker_result = goal_checker(goal_in_airport, airport.airport_data[0]['name'], battery, score, airport.distance);
-        console.log(goal_checker_result);
-        if (goal_checker_result['airport_name'] === "") {
+        const goal_outcome_result = goal_outcome(goal_in_airport, airport.airport_data[0]['name'], battery, score, airport.distance);
+        console.log(goal_outcome_result);
+        if (goal_outcome_result['airport_name'] === "") {
             current_airport_icao = "";
         }
         current_airport_icao = airport.airport_data[0]['ident'];
-        console.log(goal_checker_result);
-        battery = goal_checker_result['battery'];
-        score = goal_checker_result['score'];
+        console.log(goal_outcome_result);
+        battery = goal_outcome_result['battery'];
+        score = goal_outcome_result['score'];
         updateScreenInfo();
     }catch (e) {
         console.log('error', e);
