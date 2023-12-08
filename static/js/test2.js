@@ -15,6 +15,8 @@ let map;
 const overlay = document.querySelector('.overlay');
 const popup = document.querySelector('.popup');
 
+rank();
+
 //functions needed for the game.
 //initialize the map.
 function initializeMap() {
@@ -189,10 +191,10 @@ function goal_outcome(goal,airport_name,battery,score,distance){
             startQuiz();
             overlay.style.display = 'block';
             quizPopupContainer.style.display = 'block';
-            //return goal_outcome_return(current_airport_name,battery,score);
+            return goal_outcome_return(current_airport_name,battery,score);
         } else {
             alert("You didn't risk getting caught but you spend battery travelling here.");
-            //return goal_outcome_return(current_airport_name,battery,score);
+            return goal_outcome_return(current_airport_name,battery,score);
         }
     }else{
         showPopup('gotCaught');
@@ -298,9 +300,27 @@ async function rank(){
         if (!response.ok) throw new Error('Invalid server input');
         const json_result = await response.json();
         console.log('result',json_result);
+        return json_result;
     } catch (e) {
         console.log('error', e);
     }
+}
+
+async function attachRank(){
+      const topTen = await rank();
+      for (let i=0; i<topTen.length; i++){
+          let tableRow = document.createElement('tr');
+          let tableData1 = document.createElement('td');
+          let tableData2 = document.createElement('td');
+          let tableData3 = document.createElement('td');
+          tableData1.innerText = i+1;
+          tableData2.innerText = topTen[i].screen_name;
+          tableData3.innerText = topTen[i].score;
+          tableRow.appendChild(tableData1);
+          tableRow.appendChild(tableData2);
+          tableRow.appendChild(tableData3);
+          document.querySelector('#rankInfo').appendChild(tableRow);
+      }
 }
 
 //using external API (Quiz game) for our project.
@@ -379,7 +399,6 @@ function checkAnswers() {
             quizPopupContainer.style.display = 'none';
             score += 15;
             battery += 500;
-            flyto();
             updateScreenInfo();
 
         } else {
@@ -418,6 +437,8 @@ function endGame() {
 }
 
 //main program starts here.
+
+attachRank();
 document.addEventListener('DOMContentLoaded', function () {
        showPopup('startPopContainer');
 });
@@ -503,6 +524,7 @@ function switchTop() {
   let x = document.getElementById('game-page');
   let y = document.getElementById('about-page');
   let z = document.getElementById('leaderboard');
+
 
   x.style.display = 'none';
 

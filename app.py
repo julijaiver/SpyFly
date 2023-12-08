@@ -82,10 +82,7 @@ def get_rank():
     cursor = config.conn.cursor(dictionary=True)
     cursor.execute(sql)
     results = cursor.fetchall()
-    dictionary_result = {}
-    for i,result in enumerate(results):
-        dictionary_result[i+1] = result
-    return dictionary_result
+    return results
 
 #create home page route
 @app.route('/')
