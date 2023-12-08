@@ -30,6 +30,7 @@ function initializeMap() {
 
     //check if there is any airports in the range. If not, then game over is true.
     if(airports_in_range.length === 0){
+        alert('Unfortunately you have insufficient battery to travel to another airport.')
         gameOver=true;
         endGame();
     }
