@@ -189,10 +189,10 @@ function goal_outcome(goal,airport_name,battery,score,distance){
             startQuiz();
             overlay.style.display = 'block';
             quizPopupContainer.style.display = 'block';
-            return goal_outcome_return(current_airport_name,battery,score);
+            //return goal_outcome_return(current_airport_name,battery,score);
         } else {
             alert("You didn't risk getting caught but you spend battery travelling here.");
-            return goal_outcome_return(current_airport_name,battery,score);
+            //return goal_outcome_return(current_airport_name,battery,score);
         }
     }else{
         showPopup('gotCaught');
@@ -379,7 +379,9 @@ function checkAnswers() {
             quizPopupContainer.style.display = 'none';
             score += 15;
             battery += 500;
+            flyto();
             updateScreenInfo();
+
         } else {
             overlay.style.display = 'none';
             quizPopupContainer.style.display = 'none';
@@ -467,4 +469,44 @@ startOverButton.addEventListener('click', function () {
     // gameOver=false;
 })
 
+// --- Page Functions ---
 
+
+// Switch display to game page
+function switchGame() {
+  let x = document.getElementById('game-page');
+  let y = document.getElementById('about-page');
+  let z = document.getElementById('leaderboard');
+
+  x.style.display = 'block';
+
+  y.style.display = 'none';
+
+  z.style.display = 'none';
+}
+
+// Switch display to about page
+function switchAbout() {
+  let x = document.getElementById('game-page');
+  let y = document.getElementById('about-page');
+  let z = document.getElementById('leaderboard');
+
+  x.style.display = 'none';
+
+  y.style.display = 'block';
+
+  z.style.display = 'none';
+}
+
+// Switch display to leaderboard page
+function switchTop() {
+  let x = document.getElementById('game-page');
+  let y = document.getElementById('about-page');
+  let z = document.getElementById('leaderboard');
+
+  x.style.display = 'none';
+
+  y.style.display = 'none';
+
+  z.style.display = 'block';
+}

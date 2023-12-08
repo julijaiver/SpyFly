@@ -39,6 +39,7 @@ body {
 
 .container {
     width: 100%;
+    display: flex;
     padding: 5rem;
     margin: auto;
     background-image: url("../photos/planeDark.png");
@@ -139,20 +140,35 @@ table {
     width: 100%;
 }
 /*---about page---*/
-.about-photo {
-    width: 50%;
+#about-page {
+    display: none;
+    min-height: 100vh;
 }
 
+.about-photo {
+    margin-top: 3rem;
+    text-align: center;
+    overflow: hidden;
+}
 .about-game {
-    width: 40%;
+    width: 80%;
+    margin-left: 2rem;
 }
 /*---leaderboard page---*/
-
-.container {
-    display: flex;
-    height: 100%;
+#leaderboard {
+    display: none;
+    min-height: 100vh;
 }
 
+.top-ten {
+    margin-left: 3rem;
+}
+
+.top-ten table{
+    width: 80%;
+    text-align: center;
+    border: gray solid 1px;
+}
 
 
 .overlay {
