@@ -196,7 +196,7 @@ function goal_outcome(goal,airport_name,battery,score,distance){
     }else{
         showPopup('gotCaught');
         gameOver = true;
-        endGame();
+        //endGame();
     }
 }
 
@@ -384,7 +384,9 @@ function checkAnswers() {
             quizPopupContainer.style.display = 'none';
             showPopup('gotCaught');
             gameOver = true;
-            endGame();
+            document.querySelector('#caughtButton').addEventListener('click', function() {
+                endGame();
+            })
         }
     } else {
         alert('Please select an answer.');
@@ -395,14 +397,19 @@ function checkAnswers() {
 function endGame() {
     if (gameOver) {
         if (score >= 100) {
-            alert(`Game over. You have ${score} points. Your mission was successful!`);
+            document.querySelector('#successPoints').innerHTML = `You have ${score} points!`;
+            //alert(`Game over. You have ${score} points. Your mission was successful!`);
             showPopup('missionSuccess');
             document.querySelector("#successButton").addEventListener('click',function(){
                 location.reload();
             })
         } else {
-            alert(`Game over. You have ${score} points. That's not enough for a successful mission. Try again!`);
-            location.reload();
+            document.querySelector('#unsuccessPoints').innerHTML = `You have ${score} points! You need 100!`;
+            //alert(`Game over. You have ${score} points. That's not enough for a successful mission. Try again!`);
+            showPopup('missionNotSuccess');
+            document.querySelector("#unsuccessButton").addEventListener('click',function(){
+                location.reload();
+            })
         }
     }
 }
@@ -453,6 +460,10 @@ submitButton.addEventListener('click', function() {
 const startOverButton = document.querySelector('#caughtButton');
 startOverButton.addEventListener('click', function () {
     closePopup('gotCaught');
-    location.reload();
-    gameOver=false;
+    gameOver = true;
+    endGame();
+    // location.reload();
+    // gameOver=false;
 })
+
+

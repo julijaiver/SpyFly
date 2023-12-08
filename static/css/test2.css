@@ -267,7 +267,8 @@ form {
     left: 42%;
 }
 
-#successButton {
+#successButton,
+#unsuccessButton {
     position: absolute;
     top: 68%;
     left: 44%;
@@ -276,11 +277,23 @@ form {
 #caughtButton {
     position: absolute;
     top: 60%;
-    left: 43%;
+    left: 41%;
 }
 
 #missionSuccess {
     display: none;
+}
+
+.mission-points {
+    position: absolute;
+    top: 49%;
+    left: 39%;
+    font-weight: 14;
+    color: white;
+}
+
+.mission-points#unsuccessPoints {
+    left: 33%;
 }
 
 footer {
