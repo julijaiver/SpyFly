@@ -43,7 +43,17 @@ body {
     padding: 5rem;
     margin: auto;
     background-image: url("../photos/planeDark.png");
-    background-repeat: repeat;
+    background-repeat: repeat;'
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly /* or flex-start, flex-end, space-between, space-around, etc. */
+}
+
+.container > div {
+    margin-bottom: 20px; /* Adjust the value as needed */
 }
 
 .page-header {
@@ -220,6 +230,7 @@ table {
 .pop-content img {
     width: 100%;
     height: auto;
+    padding-bottom: 5rem;
 }
 
 #difficultyImg {
@@ -242,6 +253,7 @@ form {
     color: white;
     font-size: 20px;
     text-align: center;
+    padding-top: 5rem;
 }
 
 #playersName {
@@ -266,6 +278,21 @@ form {
 
 .popup-button:hover {
     background-color: rgb(255, 255, 255, 0.4);
+}
+
+#playerForm {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#difficultyPopContainer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-left: 3rem;
 }
 
 #submitName {
