@@ -329,7 +329,7 @@ async function fetchQuizData() {
     const options = {
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': '009ecb696dmshe46f2fac8aecfccp1f6ec3jsnae92dcd0a865',
+            'X-RapidAPI-Key': '86eed41b1fmsh0633d8b001fca09p1558c6jsn5da3c9803611',
             'X-RapidAPI-Host': 'quiz26.p.rapidapi.com'
         }
     };
