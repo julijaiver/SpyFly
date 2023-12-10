@@ -16,7 +16,7 @@
 }
 
 .space-evenly {
-justify-content: space-evenly;
+    justify-content: space-evenly;
 }
 
 .responsive-image {
@@ -39,29 +39,23 @@ body {
 
 .container {
     width: 100%;
-    display: flex;
     padding: 5rem;
     margin: auto;
     background-image: url("../photos/planeDark.png");
-    background-repeat: repeat;'
-}
-
-.container {
+    background-repeat: repeat;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly /* or flex-start, flex-end, space-between, space-around, etc. */
 }
 
 .container > div {
-    margin-bottom: 20px; /* Adjust the value as needed */
+    margin-bottom: 0.5rem; /* Adjust the value as needed */
 }
 
 .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--black);
-    color: var(--white);
 }
 
 .page-nav {
@@ -70,7 +64,7 @@ body {
 }
 
 .navElement {
-    width: 80px;
+    width: 5rem;
     height: auto;
     cursor: pointer;
 }
@@ -104,15 +98,22 @@ header, footer {
 
 footer {
     margin-top: auto;
+    text-align: center;
 }
 
-/*---game page---*/
+/*---
+Game Page
+---*/
 #map {
-    width: 45%;
-    white-space: nowrap;
-    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.3) 3px 3px 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 30rem;
+    width: 45rem;
 }
-/*--- adding comment so i can commit---*/
+
 #data {
     width: 35%;
     white-space: nowrap;
@@ -120,27 +121,13 @@ footer {
     margin-left: 1rem;
 }
 
-#map{
-    border-radius: 6px;
-    box-shadow: rgba(0, 0, 0, 0.3) 3px 3px 10px;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    height: 500px;
-    width: 700px;
-}
-
-.box {
-    margin: auto;
-    border: var(--white) ;
-    border-radius: 0.5rem;
-}
 
 .tb-head {
     padding: 0.5rem;
     text-align: center;
     margin-bottom: auto;
 }
+
 td {
     padding: 0.5rem;
 }
@@ -149,7 +136,10 @@ table {
     background-color: rgba(255, 238, 238, 0.6);
     width: 100%;
 }
-/*---about page---*/
+
+/*---
+About Page
+---*/
 #about-page {
     display: none;
     min-height: 100vh;
@@ -160,11 +150,15 @@ table {
     text-align: center;
     overflow: hidden;
 }
+
 .about-game {
     width: 80%;
     margin-left: 2rem;
 }
-/*---leaderboard page---*/
+
+/*---
+Leaderboard Page
+---*/
 #leaderboard {
     display: none;
     min-height: 100vh;
@@ -174,15 +168,17 @@ table {
     margin-left: 3rem;
 }
 
-.top-ten table{
+.top-ten table {
     width: 80%;
     text-align: center;
     border: gray solid 1px;
 }
 
-
+/*---
+pop ups
+---*/
 .overlay {
-    display:none;
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -193,20 +189,18 @@ table {
 }
 
 .popup {
-    display:none;
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    justify-content: center;
-    align-items: center;
     z-index: 9999;
 }
 
 #quizPopup.popup {
     display: none;
-    width: 400px;
-    height: 400px;
+    width: 25rem;
+    height: 25rem;
     background-image: url('../photos/PopupImg.png');
     background-size: cover;
     text-align: center;
@@ -221,16 +215,14 @@ table {
 }
 
 .quiz-content {
-    font-family: Nova-square, sans-serif;
     font-weight: bold;
-    padding: 65px;
-    color: black;
+    padding: 4.5rem;
 }
 
 .pop-content img {
     width: 100%;
     height: auto;
-    padding-bottom: 5rem;
+    padding-bottom: 3rem;
 }
 
 #difficultyImg {
@@ -248,12 +240,10 @@ table {
 form {
     position: absolute;
     top: 50%;
-    left: 30%;
-    font-family: Nova-square, sans-serif;
     color: white;
     font-size: 20px;
     text-align: center;
-    padding-top: 5rem;
+    padding-top: 4rem;
 }
 
 #playersName {
@@ -281,8 +271,6 @@ form {
 }
 
 #playerForm {
-    position: fixed;
-    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -298,6 +286,7 @@ form {
 #submitName {
     margin-top: 20px;
 }
+
 #submitContinent {
     position: absolute;
     top: 60%;
@@ -313,7 +302,7 @@ form {
 #successButton,
 #unsuccessButton {
     position: absolute;
-    top: 68%;
+    top: 63%;
     left: 44%;
 }
 
@@ -329,16 +318,12 @@ form {
 
 .mission-points {
     position: absolute;
-    top: 49%;
+    top: 45%;
     left: 39%;
     font-weight: 14;
     color: white;
 }
 
-.mission-points#unsuccessPoints {
+#unsuccessPoints {
     left: 33%;
-}
-
-footer {
-    text-align: center;
 }
