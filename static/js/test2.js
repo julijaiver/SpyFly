@@ -329,7 +329,7 @@ async function fetchQuizData() {
     const options = {
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': '86eed41b1fmsh0633d8b001fca09p1558c6jsn5da3c9803611',
+            'X-RapidAPI-Key': '0bcfba0575msh265ffc8fae19293p1b0791jsn53f45254bb4c',
             'X-RapidAPI-Host': 'quiz26.p.rapidapi.com'
         }
     };
@@ -399,6 +399,7 @@ function checkAnswers() {
             quizPopupContainer.style.display = 'none';
             score += 15;
             battery += 500;
+            flyto()
             updateScreenInfo();
 
         } else {
@@ -499,7 +500,7 @@ function switchGame() {
   let y = document.getElementById('about-page');
   let z = document.getElementById('leaderboard');
 
-  x.style.display = 'block';
+  x.style.display = 'flex';
 
   y.style.display = 'none';
 
