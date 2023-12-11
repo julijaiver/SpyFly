@@ -28,7 +28,6 @@ function initializeMap() {
         map.off();
         map.remove();
     }
-    console.log(airports_in_range.length);
 
     //check if there is any airports in the range. If not, then game over is true.
     if(airports_in_range.length === 0){
@@ -140,19 +139,15 @@ async function newGame(){
               'Content-type': 'application/json',
         },
     }
-    console.log('data:',data);
 
     // send the data to flask
     try {
       const result = await fetchData('http://127.0.0.1:5000/newgame',data)
-      console.log('result',result);
        airports_in_range = result.airports_in_range;
        game_id=result.game.game_id;
        current_airport_info=result.game;
        current_airport_icao=current_airport_info.current_airport;
        current_airport_name=current_airport_info.airport_name;
-       console.log(game_id)
-       console.log(current_airport_info)
 
    } catch (e) {
       console.log('error', e);
@@ -237,23 +232,14 @@ async function goal_check(airport){
         'Content-type': 'application/json'
     },
     }
-    console.log('data:',goal_data);
     try {
         const result = await fetchData('http://127.0.0.1:5000/checkgoal', goal_data);
-        console.log('result', result);
         const goal_in_airport = parseInt(result.goal);
-        console.log(goal_in_airport);
-        console.log(airport.airport_data[0]['name']);
-        console.log(battery);
-        console.log(score);
-        console.log(airport.distance);
         const goal_outcome_result = goal_outcome(goal_in_airport, airport.airport_data[0]['name'], battery, score, airport.distance);
-        console.log(goal_outcome_result);
         if (goal_outcome_result['airport_name'] === "") {
             current_airport_icao = "";
         }
         current_airport_icao = airport.airport_data[0]['ident'];
-        console.log(goal_outcome_result);
         battery = goal_outcome_result['battery'];
         score = goal_outcome_result['score'];
         updateScreenInfo();
@@ -276,16 +262,12 @@ async function flyto(){
                             'Content-type': 'application/json',
                         },
                     }
-                    console.log('data:',data);
 
                     // send the data to flask
                     try {
                   const result = await fetchData('http://127.0.0.1:5000/flyto',data)
-                  console.log('result',result);
                    airports_in_range = result.airports_in_range;
                    current_airport_info=result.game;
-                   console.log(game_id);
-                   console.log(current_airport_info);
                } catch (e) {
                   console.log('error', e);
                }
@@ -299,7 +281,6 @@ async function rank(){
         const response = await fetch('http://127.0.0.1:5000/rank');
         if (!response.ok) throw new Error('Invalid server input');
         const json_result = await response.json();
-        console.log('result',json_result);
         return json_result;
     } catch (e) {
         console.log('error', e);
@@ -399,7 +380,7 @@ function checkAnswers() {
             quizPopupContainer.style.display = 'none';
             score += 15;
             battery += 500;
-            flyto()
+            flyto();
             updateScreenInfo();
 
         } else {
@@ -451,6 +432,7 @@ const submitNameButton = document.querySelector('#submitName');
 submitNameButton.addEventListener('click', function () {
     showPopup('difficultyPopContainer');
 })
+
 
 //get continent
 const submitDifficultyButton = document.querySelector('#submitContinent');
